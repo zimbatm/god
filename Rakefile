@@ -10,7 +10,11 @@ require 'date'
 #############################################################################
 
 def name
-  @name ||= Dir['*.gemspec'].first.split('.').first
+  'god'
+end
+
+def gem_name
+  'ohmy'
 end
 
 def version
@@ -27,15 +31,16 @@ def rubyforge_project
 end
 
 def gemspec_file
-  "#{name}.gemspec"
+  "#{gem_name}.gemspec"
 end
 
 def gem_file
-  "#{name}-#{version}.gem"
+  "#{gem_name}-#{version}.gem"
 end
 
 def replace_header(head, header_name)
-  head.sub!(/(\.#{header_name}\s*= ').*'/) { "#{$1}#{send(header_name)}'"}
+  key = header_name.to_s.sub(/^gem_/,'')
+  head.sub!(/(\.#{key}\s*= ').*'/) { "#{$1}#{send(header_name)}'"}
 end
 
 #############################################################################
@@ -161,7 +166,7 @@ task :gemspec do
   head, manifest, tail = spec.split("  # = MANIFEST =\n")
 
   # replace name version and date
-  replace_header(head, :name)
+  replace_header(head, :gem_name)
   replace_header(head, :version)
   replace_header(head, :date)
   #comment this out if your rubyforge_project has a different name
